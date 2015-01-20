@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+
 #import "CardMatchingGame.h"
 
 @interface ViewController : UIViewController
 @property (strong, nonatomic) CardMatchingGame *game;
 @property (strong, nonatomic) NSMutableArray *history;
-- (UIImage *)backgroundImageForCard:(Card *)card;
+@property (nonatomic) NSUInteger numberOfStartingCards;
+@property (nonatomic) CGSize maxCardSize;
 @end
 

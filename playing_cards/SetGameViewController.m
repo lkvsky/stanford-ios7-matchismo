@@ -54,12 +54,10 @@
     }
 }
 
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    if ([segue.destinationViewController isKindOfClass:[HistoryViewController class]]) {
-//        HistoryViewController *historyVC = (HistoryViewController *)segue.destinationViewController;
-//        historyVC.history = self.history;
-//    }
-//}
+- (UIImage *)backgroundImageForCard:(Card *)card
+{
+    return [UIImage imageNamed:card.isChosen ? @"cardfront" : @"cardback"];
+}
 
 - (NSMutableAttributedString *)buildStatus:(NSArray *)cards
               thatMatched:(BOOL)isMatch

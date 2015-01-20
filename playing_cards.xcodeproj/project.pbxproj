@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		3C3A34D01A49F58A007598FD /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3A34CF1A49F58A007598FD /* NavigationController.m */; };
 		3C3A34D31A49F69E007598FD /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3A34D21A49F69E007598FD /* HistoryViewController.m */; };
+		3C3A34D61A6060EC007598FD /* PlayingCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3A34D51A6060EC007598FD /* PlayingCardView.m */; };
+		3C3A34DC1A6EA4CD007598FD /* Grid.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3A34DB1A6EA4CD007598FD /* Grid.m */; };
 		3C3C6A981A1B9E2F00E43A7A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C6A971A1B9E2F00E43A7A /* main.m */; };
 		3C3C6A9B1A1B9E2F00E43A7A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C6A9A1A1B9E2F00E43A7A /* AppDelegate.m */; };
 		3C3C6A9E1A1B9E2F00E43A7A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C6A9D1A1B9E2F00E43A7A /* ViewController.m */; };
@@ -41,6 +43,10 @@
 		3C3A34CF1A49F58A007598FD /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		3C3A34D11A49F69E007598FD /* HistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
 		3C3A34D21A49F69E007598FD /* HistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryViewController.m; sourceTree = "<group>"; };
+		3C3A34D41A6060EC007598FD /* PlayingCardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayingCardView.h; sourceTree = "<group>"; };
+		3C3A34D51A6060EC007598FD /* PlayingCardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayingCardView.m; sourceTree = "<group>"; };
+		3C3A34DA1A6EA4CD007598FD /* Grid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Grid.h; path = "../../../../Downloads/Grid 2/Grid.h"; sourceTree = "<group>"; };
+		3C3A34DB1A6EA4CD007598FD /* Grid.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Grid.m; path = "../../../../Downloads/Grid 2/Grid.m"; sourceTree = "<group>"; };
 		3C3C6A921A1B9E2F00E43A7A /* playing_cards.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = playing_cards.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C3C6A961A1B9E2F00E43A7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C3C6A971A1B9E2F00E43A7A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -116,6 +122,8 @@
 				3C3C6A9C1A1B9E2F00E43A7A /* ViewController.h */,
 				3C3C6A9D1A1B9E2F00E43A7A /* ViewController.m */,
 				3C3C6A9F1A1B9E2F00E43A7A /* Main.storyboard */,
+				3C3A34D41A6060EC007598FD /* PlayingCardView.h */,
+				3C3A34D51A6060EC007598FD /* PlayingCardView.m */,
 				3C3A34D11A49F69E007598FD /* HistoryViewController.h */,
 				3C3A34D21A49F69E007598FD /* HistoryViewController.m */,
 				3C3A34CE1A49F58A007598FD /* NavigationController.h */,
@@ -159,6 +167,8 @@
 		3C3C6AC81A1BB80400E43A7A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				3C3A34DA1A6EA4CD007598FD /* Grid.h */,
+				3C3A34DB1A6EA4CD007598FD /* Grid.m */,
 				3C3C6ACC1A1BD9A000E43A7A /* CardMatchingGame.h */,
 				3C3C6ACD1A1BD9A000E43A7A /* CardMatchingGame.m */,
 				3C3C6ABB1A1B9E8500E43A7A /* Card.h */,
@@ -288,7 +298,9 @@
 				3C3C6ACE1A1BD9A000E43A7A /* CardMatchingGame.m in Sources */,
 				3C8EA2F01A38DBF50027824E /* SetGameViewController.m in Sources */,
 				3C3C6AC61A1BAAC200E43A7A /* PlayingCardDeck.m in Sources */,
+				3C3A34DC1A6EA4CD007598FD /* Grid.m in Sources */,
 				3C3A34D01A49F58A007598FD /* NavigationController.m in Sources */,
+				3C3A34D61A6060EC007598FD /* PlayingCardView.m in Sources */,
 				3C3C6A981A1B9E2F00E43A7A /* main.m in Sources */,
 				3C3C6ABD1A1B9E8500E43A7A /* Card.m in Sources */,
 			);
