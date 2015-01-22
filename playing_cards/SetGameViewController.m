@@ -10,17 +10,25 @@
 #import "CardMatchingGame.h"
 #import "SetCardDeck.h"
 #import "HistoryViewController.h"
-
+#import "SetCardView.h"
 
 @interface SetGameViewController ()
 @property (nonatomic) int mode;
-@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UIButton *dealButton;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
+@property (weak, nonatomic) IBOutlet UIView *gridView;
+@property (nonatomic) NSMutableArray *cardViews;
 @end
 
 @implementation SetGameViewController
+
+- (NSMutableArray *)cardViews
+{
+    if (!_cardViews) _cardViews = [[NSMutableArray alloc] initWithCapacity:self.numberOfStartingCards];
+    
+    return _cardViews;
+}
 
 - (int)mode
 {
@@ -35,15 +43,21 @@
 
 - (void)updateUI
 {
-    
-    for (UIButton *cardButton in self.cardButtons) {
-        NSInteger cardButtonIndex = [self.cardButtons indexOfObject:cardButton];
-        SetCard *card = (SetCard *)[self.game cardAtIndex:cardButtonIndex];
-        [cardButton setAttributedTitle:[self titleForCard:card] forState:UIControlStateNormal];
-        [cardButton setBackgroundImage:[self backgroundImageForCard:card] forState:UIControlStateNormal];
-        cardButton.enabled = !card.isMatched;
-        self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", (int)self.game.score];
+    if ([self.cardViews count] == 0) {
+        [self initCardViews];
+        [self addCardsToGrid];
+    } else {
+        for (SetCardView *cardView in self.cardViews) {
+            Card *card = [self.game cardAtIndex:cardView.tag];
+            cardView.faceUp = card.isChosen;
+            
+            if (card.isMatched) {
+                [self updateCardView:cardView];
+            }
+        }
     }
+      
+    self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", (int)self.game.score];
     
     if (self.game.playComplete) {
         NSAttributedString *currentStatus = [self buildStatus:self.game.chosenCards thatMatched:self.game.isMatching];
@@ -54,12 +68,61 @@
     }
 }
 
-- (UIImage *)backgroundImageForCard:(Card *)card
+- (void)initCardViews
 {
-    return [UIImage imageNamed:card.isChosen ? @"cardfront" : @"cardback"];
+    for (NSUInteger cardIndex = 0;
+         cardIndex < self.numberOfStartingCards;
+         cardIndex++) {
+        SetCard *card = (SetCard *)[self.game cardAtIndex:cardIndex];
+        bool viewExists = [self.cardViews count] > 0 && cardIndex <= [self.cardViews count] - 1;
+        SetCardView *cardView;
+        
+        if (viewExists) {
+            cardView = [self.cardViews objectAtIndex:cardIndex];
+        } else {
+            cardView = [[SetCardView alloc] init];
+        }
+        
+        cardView.symbolCount = card.symbolCount;
+        cardView.symbolFillType = card.symbolFillType;
+        cardView.symbolType = card.symbolType;
+        cardView.symbolColor = card.symbolColor;
+        cardView.faceUp = card.isChosen;
+        cardView.tag = cardIndex;
+        cardView.alpha = 1.0;
+        
+        if (!viewExists) {
+            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                  action:@selector(tapCard:)];
+            [cardView addGestureRecognizer:tap];
+            [self.cardViews addObject:cardView];
+            [self.gridView addSubview:cardView];
+        }
+    }
 }
 
-- (NSMutableAttributedString *)buildStatus:(NSArray *)cards
+- (void)addCardsToGrid
+{
+    NSUInteger cardViewIndex = 0;
+    for (NSUInteger rowIndex = 0;
+         rowIndex < self.grid.rowCount;
+         rowIndex++) {
+        for (NSUInteger columnIndex = 0;
+             columnIndex < self.grid.columnCount;
+             columnIndex++) {
+            SetCardView *cardView = [self.cardViews objectAtIndex:cardViewIndex];
+            cardView.frame = [self.grid frameOfCellAtRow:rowIndex inColumn:columnIndex];
+            
+            if (cardViewIndex == [self.cardViews count] - 1) {
+                break;
+            } else {
+                cardViewIndex++;
+            }
+        }
+    }
+}
+
+- (NSMutableAttributedString *)buildStatus:(NSArray *)setCards
               thatMatched:(BOOL)isMatch
 {
     NSMutableAttributedString *baseString;
@@ -73,10 +136,10 @@
     NSMutableAttributedString *cardString = [[NSMutableAttributedString alloc] initWithString:@""];
     NSAttributedString *delimiter = [[NSAttributedString alloc] initWithString:@", "];
     
-    for (SetCard *card in cards) {
-        [cardString appendAttributedString:[self getSetCardTitle:card]];
+    for (SetCard *card in setCards) {
+        [cardString appendAttributedString:[SetCardView getDesignForSymbol:card.symbolType withCount:card.symbolCount inColor:card.symbolColor withFill:card.symbolFillType]];
     
-        if (card != [cards lastObject]) {
+        if (cardString != [setCards lastObject]) {
             [cardString appendAttributedString:delimiter];
         }
     }
@@ -91,63 +154,12 @@
     return baseString;
 }
 
-- (NSAttributedString *)titleForCard:(SetCard *)card
+- (void)viewDidLoad
 {
-    return card.isChosen ? [self getSetCardTitle:card] : [[NSAttributedString alloc] initWithString:@""];
-}
-
-- (NSMutableAttributedString *)getSetCardTitle:(SetCard *)card
-{
-    NSMutableAttributedString *cardTitle = [[NSMutableAttributedString alloc] initWithString:[self getSymbolForCard:card]];
-    [cardTitle addAttributes:[self getSymbolColorAttributes:card] range:(NSRange){0, (int)[cardTitle.string length]}];
-    
-    return cardTitle;
-}
-
-- (NSMutableDictionary *)getSymbolColorAttributes:(SetCard *)card
-{
-    NSMutableDictionary *fontStyles = [[NSMutableDictionary alloc] initWithDictionary:@{NSFontAttributeName: [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]
-}];
-    UIColor *symbolColor;
-    
-    if ((int)card.symbolColor == 1) {
-        symbolColor = [UIColor blueColor];
-    } else if ((int)card.symbolColor == 2) {
-        symbolColor = [UIColor redColor];
-    } else {
-        symbolColor = [UIColor greenColor];
-    }
-    
-    if ((int)card.symbolFillType == 1) {
-        [fontStyles setObject:symbolColor forKey:NSStrokeColorAttributeName];
-        [fontStyles setObject:@-5 forKey:NSStrokeWidthAttributeName];
-        [fontStyles setObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
-    } else if ((int)card.symbolFillType == 2) {
-        [fontStyles setObject:symbolColor forKey:NSStrokeColorAttributeName];
-        [fontStyles setObject:@-5 forKey:NSStrokeWidthAttributeName];
-        [fontStyles setObject:[symbolColor colorWithAlphaComponent:0.5] forKey:NSForegroundColorAttributeName];
-    } else {
-        [fontStyles setObject:symbolColor forKey:NSForegroundColorAttributeName];
-    }
-    
-    return fontStyles;
-}
-
-- (NSMutableString *)getSymbolForCard:(SetCard *)card
-{
-    NSMutableString *baseString = [[NSMutableString alloc] initWithString:@""];
-    
-    for (int i = 0; i < (int)card.symbolCount; i++) {
-        if ((int)card.symbolType == 1) {
-            [baseString appendString:@"▲"];
-        } else if ((int)card.symbolType == 2) {
-            [baseString appendString:@"●"];
-        } else if ((int)card.symbolType == 3) {
-            [baseString appendString:@"■"];
-        }
-    }
-    
-    return baseString;
+    [super viewDidLoad];
+    self.numberOfStartingCards = 12;
+    self.maxCardSize = CGSizeMake(80.0, 120.0);
+    [self updateUI];
 }
 
 

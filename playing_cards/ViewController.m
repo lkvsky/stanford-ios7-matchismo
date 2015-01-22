@@ -11,7 +11,6 @@
 #import "HistoryViewController.h"
 #import "PlayingCardView.h"
 #import "PlayingCard.h"
-#import "Grid.h"
 
 @interface ViewController ()
 @property (nonatomic) int mode;
@@ -21,7 +20,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
 @property (weak, nonatomic) IBOutlet UIView *gridView;
 @property (strong, nonatomic) NSMutableArray *cardViews;
-@property (strong, nonatomic) Grid *grid;
 @end
 
 @implementation ViewController
@@ -82,15 +80,9 @@
 - (IBAction)touchDealButton:(UIButton *)sender
 {
     self.game = nil;
+    [self initCardViews];
     [self updateUI];
 
-}
-
-- (IBAction)touchCardButton:(UIButton *)sender
-{
-    NSInteger chosenButtonIndex = [self.cardButtons indexOfObject:sender];
-    [self.game chooseCardAtIndex:chosenButtonIndex];
-    [self updateUI];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -100,28 +92,39 @@
     }
 }
 
-#define CARDSPACINGINPERCENT 0.08
-
 - (void)initCardViews
 {
     for (NSUInteger cardIndex = 0;
          cardIndex < self.numberOfStartingCards;
          cardIndex++) {
         PlayingCard *card = (PlayingCard *)[self.game cardAtIndex:cardIndex];
-        PlayingCardView *cardView = [[PlayingCardView alloc] init];
+        bool viewExists = [self.cardViews count] > 0 && cardIndex <= [self.cardViews count] - 1;
+        PlayingCardView *cardView;
+        
+        if (viewExists) {
+            cardView = [self.cardViews objectAtIndex:cardIndex];
+        } else {
+            cardView = [[PlayingCardView alloc] init];
+        }
         
         cardView.tag = cardIndex;
         cardView.suit = card.suit;
         cardView.rank = card.rank;
         cardView.faceUp = card.isChosen;
+        cardView.alpha = 1.0;
         
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                              action:@selector(tapCard:)];
-        [cardView addGestureRecognizer:tap];
-        [self.cardViews addObject:cardView];
-        [self.gridView addSubview:cardView];
+        if (!viewExists) {
+            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                  action:@selector(tapCard:)];
+            [cardView addGestureRecognizer:tap];
+            [self.cardViews addObject:cardView];
+            [self.gridView addSubview:cardView];
+        }
     }
-    
+}
+
+- (void)addCardsToGrid
+{
     NSUInteger cardViewIndex = 0;
     for (NSUInteger rowIndex = 0;
          rowIndex < self.grid.rowCount;
@@ -141,7 +144,7 @@
     }
 }
 
-- (void)updateCardView:(PlayingCardView *)cardView
+- (void)updateCardView:(UIView *)cardView
 {
     [cardView setAlpha:0.7];
 }
@@ -150,6 +153,7 @@
 {
     if ([self.cardViews count] == 0) {
         [self initCardViews];
+        [self addCardsToGrid];
     } else {
         for (PlayingCardView *cardView in self.cardViews) {
             Card *card = [self.game cardAtIndex:cardView.tag];

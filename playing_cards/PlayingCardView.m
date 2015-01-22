@@ -65,7 +65,7 @@
 {
     CGContextSaveGState(context);
     
-    CGPoint middle = CGPointMake(self.bounds.size.width/2, self.bounds.size.width/2);
+    CGPoint middle = CGPointMake(self.bounds.size.width/2 - 10, self.bounds.size.height/2 - 10);
     NSMutableString *baseString = [[NSMutableString alloc] initWithString:[self rankAsString]];
     [baseString appendString:self.suit];
     NSAttributedString *attributedSuit = [[NSAttributedString alloc] initWithString:baseString];
