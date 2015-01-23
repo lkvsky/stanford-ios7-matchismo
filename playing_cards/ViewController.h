@@ -8,16 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+#import "GameViewController.h"
 #import "CardMatchingGame.h"
 #import "Grid.h"
 
-@interface ViewController : UIViewController
-@property (strong, nonatomic) CardMatchingGame *game;
-@property (strong, nonatomic) NSMutableArray *history;
-@property (nonatomic) NSUInteger numberOfStartingCards;
-@property (nonatomic) CGSize maxCardSize;
-@property (nonatomic) Grid *grid;
+@interface ViewController : GameViewController
 
-- (void)updateCardView:(UIView *)cardView;
 @end
 

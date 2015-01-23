@@ -30,12 +30,6 @@
     return _cardViews;
 }
 
-- (int)mode
-{
-    if (!_mode) _mode = 3;
-    return _mode;
-}
-
 - (SetCardDeck *)createDeck
 {
     return [[SetCardDeck alloc] init];
@@ -157,8 +151,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.mode = 3;
     self.numberOfStartingCards = 12;
-    self.maxCardSize = CGSizeMake(80.0, 120.0);
+    self.maxCardSize = CGSizeMake(200.0, 400.0);
     [self updateUI];
 }
 

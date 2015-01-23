@@ -31,58 +31,9 @@
     return _cardViews;
 }
 
-- (Grid *)grid
-{
-    if (!_grid) {
-        _grid = [[Grid alloc] init];
-        _grid.cellAspectRatio = 80.0 / 120.0;
-        _grid.minimumNumberOfCells = self.numberOfStartingCards;
-        _grid.maxCellWidth = self.maxCardSize.width;
-        _grid.maxCellHeight = self.maxCardSize.height;
-        _grid.size = self.gridView.frame.size;
-    }
-    
-    return _grid;
-}
-
-- (int)mode
-{
-    if (!_mode) _mode = 2;
-    return _mode;
-}
-
-- (CardMatchingGame *)game
-{
-    if (!_game) _game = [[CardMatchingGame alloc] initWithCardCount:self.numberOfStartingCards
-                                                          usingDeck:[self createDeck]
-                                                          usingMode:self.mode];
-    return _game;
-}
-
 - (Deck *)createDeck
 {
     return [[PlayingCardDeck alloc] init];
-}
-
-- (NSMutableArray *)history
-{
-    if (!_history) _history = [[NSMutableArray alloc] init];
-    return _history;
-}
-
-
-- (void)tapCard:(UISwipeGestureRecognizer *)sender
-{
-    [self.game chooseCardAtIndex:sender.view.tag];
-    [self updateUI];
-}
-
-- (IBAction)touchDealButton:(UIButton *)sender
-{
-    self.game = nil;
-    [self initCardViews];
-    [self updateUI];
-
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -144,11 +95,6 @@
     }
 }
 
-- (void)updateCardView:(UIView *)cardView
-{
-    [cardView setAlpha:0.7];
-}
-
 - (void)updateUI
 {
     if ([self.cardViews count] == 0) {
@@ -204,6 +150,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.mode = 2;
     self.numberOfStartingCards = 18;
     self.maxCardSize = CGSizeMake(80.0, 120.0);
     [self updateUI];
